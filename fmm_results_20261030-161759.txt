@@ -1,0 +1,71 @@
+=== Find My Mouse double-Ctrl test (PowerToys #19806) ===
+Date:              2026-10-30 16:17:59
+Windows:           26H2 build 26300.9711
+Python:            3.13.14
+Find My Mouse in:  C:\Users\aasut\AppData\Local\PowerToys\PowerToys.exe
+Host version:      0.102.3001.0
+Activation method: 0 = Press Left Control twice
+Include Win key:   False
+No activate in game mode: True
+Excluded apps:     ''
+Windows double-click time: 480 ms
+Expected from PowerToys code: spotlight only if the 2nd Ctrl comes 96-480 ms after the 1st
+Active window during test: notepad.exe
+Gaps used: A and C = 240 ms (inside), B = 1000 ms (outside)
+
+Test A: two Left Ctrl taps 240 ms apart (normal use)
+  try 1: gap  240 ms -> spotlight YES
+  try 2: gap  240 ms -> spotlight YES
+  try 3: gap  240 ms -> spotlight YES
+  try 4: gap  240 ms -> spotlight YES
+  try 5: gap  240 ms -> spotlight YES
+  RESULT: spotlight in 5/5 tries, expected 5/5 -> PASS (as expected)
+
+Test B: two Left Ctrl taps 1000 ms apart (too slow)
+  try 1: gap 1000 ms -> spotlight no
+  try 2: gap 1000 ms -> spotlight no
+  try 3: gap 1000 ms -> spotlight no
+  try 4: gap 1000 ms -> spotlight no
+  try 5: gap 1000 ms -> spotlight no
+  RESULT: spotlight in 0/5 tries, expected 0/5 -> PASS (as expected)
+
+Test C: lone Ctrl tap, then Ctrl+C 240 ms later (accidental trigger)
+  try 1: gap  240 ms -> spotlight YES
+  try 2: gap  240 ms -> spotlight YES
+  try 3: gap  240 ms -> spotlight YES
+  try 4: gap  240 ms -> spotlight YES
+  try 5: gap  240 ms -> spotlight YES
+  RESULT: spotlight in 5/5 tries, expected 5/5 -> PASS (as expected)
+
+Test E: Ctrl+C, then Ctrl+C again 240 ms later, NO lone tap (like copy then paste)
+  try 1: gap  240 ms -> spotlight no
+  try 2: gap  240 ms -> spotlight no
+  try 3: gap  240 ms -> spotlight no
+  try 4: gap  240 ms -> spotlight no
+  try 5: gap  240 ms -> spotlight no
+  RESULT: spotlight in 0/5 tries, expected 0/5 -> PASS (as expected)
+
+Test D (bonus): gap sweep - where exactly is the limit?
+   target  actual  spotlight  expected
+     60ms    60ms  no         no   OK
+     80ms    80ms  no         no   near limit (+-16 ms timer)
+    130ms   130ms  YES        YES  OK
+    200ms   200ms  YES        YES  OK
+    300ms   300ms  YES        YES  OK
+    400ms   400ms  YES        YES  OK
+    450ms   450ms  YES        YES  OK
+    470ms   470ms  YES        YES  near limit (+-16 ms timer)
+    510ms   510ms  no         no   OK
+    530ms   530ms  no         no   OK
+    600ms   600ms  no         no   OK
+    800ms   800ms  no         no   OK
+  RESULT: spotlight appeared for gaps ~130 to ~470 ms (double-click time 480 ms)
+
+=== SUMMARY ===
+Test A: 5/5 (expected 5/5) PASS (as expected)
+Test B: 0/5 (expected 0/5) PASS (as expected)
+Test C: 5/5 (expected 5/5) PASS (as expected)
+Test E: 0/5 (expected 0/5) PASS (as expected)
+Test D: spotlight for gaps ~130 to ~470 ms, Windows double-click time 480 ms
+
+DONE
